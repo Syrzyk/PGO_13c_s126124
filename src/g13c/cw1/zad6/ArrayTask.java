@@ -1,8 +1,8 @@
-package g13c.cw1.zad5;
+package g13c.cw1.zad6;
 
-public class z5 {
+public class ArrayTask {
     public static void main(String[] args) {
-        z5 Array = new z5();
+        ArrayTask Array = new ArrayTask();
         Array.generateRandomArray();
         System.out.print("Generated array: ");
         Array.printArray();
