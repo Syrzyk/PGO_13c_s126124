@@ -1,20 +1,37 @@
 package g13c.cw2;
-
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.ArrayList;
 
 public class Person {
     private String name;
     private String surname;
     private LocalDate dateOfBirth;
-    private final int age = getAge().getYears();
-    private Address address;
-    private Book book;
+    private LocalDate dateOfDeath; // to calculate age, if author is dead
+    private Address address; // relation to Address class
+    private ArrayList<Book> books = new ArrayList<>(); // list of books assigned to the person
+    private boolean author=false; // until person is assigned to the first book
+    private Book borrowedBook; // Book object which is in possess. If null, nothing is borrowed
 
     //---------- Methods ---------- //
-        public void publishBook(){
+    public Person(String name, String surname, LocalDate dateOfBirth){
+        setName(name);
+        setSurname(surname);
+        setDateOfBirth(dateOfBirth);
+    }
+    public Person(String name, String surname, LocalDate dateOfBirth, LocalDate dateOfDeath, Address address ){
+        this(name, surname, dateOfBirth);
+        setDateOfDeath(dateOfDeath);
+        setAddress(address);
+    }
 
+    public void addBook(Book newBook){
+        if (!books.contains(newBook)){ // if book is already assigned to person(author)
+            books.add(newBook);
+            newBook.addAuthor(this);
+            author=true;
         }
+    }
 
     //---------- Getters & Setters ---------- //
         public String getName() {
@@ -22,7 +39,13 @@ public class Person {
         }
 
         public void setName(String name) {
-            this.name = name;
+            if (name.matches("[a-zA-Z]+")) { // only letters
+                this.name = name;
+            } else{
+                System.out.println("Use only letters");
+            }
+
+
         }
 
         public String getSurname() {
@@ -37,9 +60,21 @@ public class Person {
             this.dateOfBirth = dateOfBirth;
         }
 
-        public Period getAge()
+        public LocalDate getDateOfBirth() {
+            return dateOfBirth;
+        }
+
+    public LocalDate getDateOfDeath() {
+        return dateOfDeath;
+    }
+
+    public void setDateOfDeath(LocalDate dateOfDeath) {
+        this.dateOfDeath = dateOfDeath;
+    }
+
+    public int getAge()
         {
-            return Period.between(dateOfBirth,LocalDate.now());
+            return Period.between(dateOfBirth,LocalDate.now()).getYears();
         }
 
         public Address getAddress() {
@@ -49,4 +84,18 @@ public class Person {
         public void setAddress(Address address) {
             this.address = address;
         }
+
+    public ArrayList<Book> getBooks() {
+        return books;
+    }
+
+    public void printBooksList(ArrayList list){
+        list.forEach(name ->{
+            System.out.println(list);
+        });
+    }
+
+    public boolean isAuthor() {
+        return author;
+    }
 }
