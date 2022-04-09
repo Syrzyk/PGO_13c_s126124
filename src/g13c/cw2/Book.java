@@ -13,10 +13,10 @@ public class Book {
     private Genre genre;
     private Lang language;
     private LocalDate publishDate;
-    private final ArrayList<Person> authors=new ArrayList<>();
-    //private int age=getAge();
-    private int borrowCount=0;
-    private boolean isAvailable=true;
+    private final ArrayList<Person> authors = new ArrayList<>();
+    //private int age = getAge();
+    private int borrowCount = 0;
+    private boolean isAvailable = true;
     private Person borrower;
 
 
@@ -26,6 +26,11 @@ public class Book {
         setGenre(genre);
         setLanguage(language);
         setPublishDate(publishDate);
+
+    }
+    public Book(String name, Genre genre, Lang language, LocalDate publishDate, Person author){
+        this(name, genre, language, publishDate);
+        this.addAuthor(author);
     }
 
     public void addAuthor(Person newAuthor){
@@ -36,16 +41,16 @@ public class Book {
     }
     public void borrowBook(Person person)
     {
-        if (isAvailable && !person.isBorrowBookLimit()){
-            isAvailable=false;
-            borrower=person;
+        if (isAvailable && !person.hasBorrowBookLimit()){
+            isAvailable = false;
+            borrower = person;
             borrowCount++;
             borrower.setBorrowedBook(this);
             borrower.setBorrowBookLimit(true);
-            System.out.println("Book "+ name +" has been borrowed by "+ borrower.getName() +" " + borrower.getSurname()+".");
+            System.out.println("Book " + name + " has been borrowed by " + borrower.getName() + " " + borrower.getSurname() + ".");
         } else
-            if (person.isBorrowBookLimit()){
-                throw new RuntimeException(person.getName() +" " + person.getSurname()+" cannot borrow more books. Limit of borrowed books has been reached.");
+            if (person.hasBorrowBookLimit()){
+                throw new RuntimeException(person.getName() + " " + person.getSurname() + " cannot borrow more books. Limit of borrowed books has been reached.");
                 //System.out.println(person.getName() +" " + person.getSurname()+" cannot borrow more books. Limit of borrowed books has been reached.");
             } else
                 throw new RuntimeException("Book "+ name + " is not available.");
@@ -56,13 +61,13 @@ public class Book {
     public void placeBack()
     {
         if (!isAvailable) {
-            System.out.println("Book " + name + " borrowed by "+ borrower.getName() + "has been placed back correctly.");
+            System.out.println("Book " + name + " borrowed by " + borrower.getName() + "has been placed back correctly.");
             borrower.setBorrowedBook(null);
             borrower.setBorrowBookLimit(false);
-            borrower=null;
-            isAvailable=true;
-
-        } else System.out.println("Book cannot be placed back. It is not borrowed by anybody.");
+            borrower = null;
+            isAvailable = true;
+        } else
+            System.out.println("Book cannot be placed back. It is not borrowed by anybody.");
     }
 
 

@@ -11,9 +11,9 @@ public class Person {
     private LocalDate dateOfDeath; // to calculate age, if author is dead
     private Address address; // relation to Address class
     private ArrayList<Book> books = new ArrayList<>(); // list of books assigned to the person
-    private boolean author=false; // until person is assigned to the first book
+    private boolean author = false; // until person is assigned to the first book
     private Book borrowedBook; // Book object which is in possess. If null, nothing is borrowed
-    private boolean borrowBookLimit=false;
+    private boolean borrowBookLimit = false;
 
     //---------- Methods ---------- //
     public Person(String name, String surname, LocalDate dateOfBirth, Address address){
@@ -21,11 +21,10 @@ public class Person {
         setName(name);
         setSurname(surname);
         setDateOfBirth(dateOfBirth);
+        setAddress(address);
     }
     public Person(String name, String surname, LocalDate dateOfBirth, Address address, LocalDate dateOfDeath ){
         this(name, surname, dateOfBirth, address);
-
-        setAddress(address);
         setDateOfDeath(dateOfDeath);
     }
 
@@ -49,7 +48,7 @@ public class Person {
         public void setName(String name) {
             if (name.matches("[a-zA-Z]+")) { // only letters
                 this.name = name;
-            } else{
+            } else {
                 System.out.println("Wprowadzone imię jest nieprawidłowe. Powinno składać się tylko z liter. Wprowadź ponownie: ");
                 Scanner scan = new Scanner(System.in);
                 this.name= scan.next();
@@ -64,11 +63,11 @@ public class Person {
 
         public void setSurname(String surname) {
             if (surname.matches("[a-zA-Z]+")) { // only letters
-                this.surname = name;
-            } else{
+                this.surname = surname;
+            } else {
                 System.out.println("Wprowadzone nazwisko jest nieprawidłowe. Powinno składać się tylko z liter. Wprowadź ponownie: ");
                 Scanner scan = new Scanner(System.in);
-                this.surname= scan.next();
+                this.surname = scan.next();
             }
         }
 
@@ -89,9 +88,9 @@ public class Person {
     }
 
     public int getAge()
-        { if (dateOfDeath == null ){
-            return Period.between(dateOfBirth,LocalDate.now()).getYears();
-                    }  else return Period.between(dateOfBirth,dateOfDeath).getYears();}
+        {
+            return Period.between(dateOfBirth, Objects.requireNonNullElseGet(dateOfDeath, LocalDate::now)).getYears();
+        }
 
         public Address getAddress() {
             return address;
@@ -122,10 +121,10 @@ public class Person {
         return   name +
                 " " + surname +
                 //", author:" + author +
-                ", age: " + getAge() + System.lineSeparator();
+                ", age: " + getAge();
     }
 
-    public boolean isBorrowBookLimit() {
+    public boolean hasBorrowBookLimit() {
         return borrowBookLimit;
     }
 

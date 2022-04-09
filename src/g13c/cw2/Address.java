@@ -46,4 +46,5 @@ public class Address {
         public void setFlat(int flat) {
             this.flat = flat;
         }
+
 }
