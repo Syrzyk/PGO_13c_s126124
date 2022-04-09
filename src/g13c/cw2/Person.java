@@ -1,9 +1,10 @@
 package g13c.cw2;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.ArrayList;
+import java.util.*;
 
 public class Person {
+    private final static Set<Person> extent = new HashSet<>();
     private String name;
     private String surname;
     private LocalDate dateOfBirth;
@@ -12,17 +13,20 @@ public class Person {
     private ArrayList<Book> books = new ArrayList<>(); // list of books assigned to the person
     private boolean author=false; // until person is assigned to the first book
     private Book borrowedBook; // Book object which is in possess. If null, nothing is borrowed
+    private boolean borrowBookLimit=false;
 
     //---------- Methods ---------- //
-    public Person(String name, String surname, LocalDate dateOfBirth){
+    public Person(String name, String surname, LocalDate dateOfBirth, Address address){
+        extent.add(this);
         setName(name);
         setSurname(surname);
         setDateOfBirth(dateOfBirth);
     }
-    public Person(String name, String surname, LocalDate dateOfBirth, LocalDate dateOfDeath, Address address ){
-        this(name, surname, dateOfBirth);
-        setDateOfDeath(dateOfDeath);
+    public Person(String name, String surname, LocalDate dateOfBirth, Address address, LocalDate dateOfDeath ){
+        this(name, surname, dateOfBirth, address);
+
         setAddress(address);
+        setDateOfDeath(dateOfDeath);
     }
 
     public void addBook(Book newBook){
@@ -31,6 +35,10 @@ public class Person {
             newBook.addAuthor(this);
             author=true;
         }
+    }
+
+    public static Set<Person> getExtent() {
+        return Collections.unmodifiableSet(extent);
     }
 
     //---------- Getters & Setters ---------- //
@@ -42,7 +50,9 @@ public class Person {
             if (name.matches("[a-zA-Z]+")) { // only letters
                 this.name = name;
             } else{
-                System.out.println("Use only letters");
+                System.out.println("Wprowadzone imię jest nieprawidłowe. Powinno składać się tylko z liter. Wprowadź ponownie: ");
+                Scanner scan = new Scanner(System.in);
+                this.name= scan.next();
             }
 
 
@@ -53,7 +63,13 @@ public class Person {
         }
 
         public void setSurname(String surname) {
-            this.surname = surname;
+            if (surname.matches("[a-zA-Z]+")) { // only letters
+                this.surname = name;
+            } else{
+                System.out.println("Wprowadzone nazwisko jest nieprawidłowe. Powinno składać się tylko z liter. Wprowadź ponownie: ");
+                Scanner scan = new Scanner(System.in);
+                this.surname= scan.next();
+            }
         }
 
         public void setDateOfBirth(LocalDate dateOfBirth) {
@@ -73,9 +89,9 @@ public class Person {
     }
 
     public int getAge()
-        {
+        { if (dateOfDeath == null ){
             return Period.between(dateOfBirth,LocalDate.now()).getYears();
-        }
+                    }  else return Period.between(dateOfBirth,dateOfDeath).getYears();}
 
         public Address getAddress() {
             return address;
@@ -89,13 +105,31 @@ public class Person {
         return books;
     }
 
-    public void printBooksList(ArrayList list){
-        list.forEach(name ->{
-            System.out.println(list);
-        });
-    }
-
     public boolean isAuthor() {
         return author;
+    }
+
+    public Book getBorrowedBook() {
+        return borrowedBook;
+    }
+
+    public void setBorrowedBook(Book borrowedBook) {
+        this.borrowedBook = borrowedBook;
+    }
+
+    @Override
+    public String toString() {
+        return   name +
+                " " + surname +
+                //", author:" + author +
+                ", age: " + getAge() + System.lineSeparator();
+    }
+
+    public boolean isBorrowBookLimit() {
+        return borrowBookLimit;
+    }
+
+    public void setBorrowBookLimit(boolean borrowBookLimit) {
+        this.borrowBookLimit = borrowBookLimit;
     }
 }
