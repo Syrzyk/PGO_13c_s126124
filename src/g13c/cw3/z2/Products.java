@@ -5,9 +5,8 @@ public class Products {
     private ProductType productType;
     private double price;
     private int quantity;
-    private boolean isAvailable;
     private Products nextProduct;
-
+    private Storage storage;
 
 
     public Products(String name, ProductType productType, double price, int quantity) {
@@ -16,9 +15,6 @@ public class Products {
         setPrice(price);
         this.quantity = quantity;
     }
-
-
-
 
 
     public Products getNextProduct() {
@@ -30,14 +26,19 @@ public class Products {
 
 
 
-    public void Sell(){
-        if (!isAvailable){
+    public void sell(){
+        if (isAvailable()){
             throw new RuntimeException("Product is not available.");
         } else
             quantity--;
-
-
     }
+
+    public void IncreaseQuantity(int deliveredQty){
+        setQuantity(getQuantity()+deliveredQty);
+        //setDeliveryTime(0); // after delivery product is available again
+    }
+
+
     public int IncreaseQuantity(){return 1;}
 
     // Getters
@@ -54,7 +55,14 @@ public class Products {
         return quantity;
     }
     public boolean isAvailable() {
-        return isAvailable;
+        return quantity <= 0;
+    }
+
+    public int deliveryTime() {
+        if (quantity > 0 || storage == null){
+            return 0;
+        } else
+            return storage.getDeliveryTime();
     }
 
     // Setters
@@ -75,7 +83,19 @@ public class Products {
         this.quantity = quantity;
     }
 
-    public void setAvailable(boolean available) {
-        isAvailable = available;
+    public void setStorage(Storage storage) {
+        this.storage = storage;
+    }
+
+    @Override
+    public String toString() {
+        return "Products{" +
+                "name='" + name + '\'' +
+                ", productType=" + productType +
+                ", price=" + price +
+                ", quantity=" + quantity +
+                ", nextProduct=" + nextProduct +
+                ", storage=" + storage +
+                '}';
     }
 }

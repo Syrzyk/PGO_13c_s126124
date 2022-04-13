@@ -1,12 +1,14 @@
 package g13c.cw3.z2;
 
+import java.util.ArrayList;
+
 public class Person {
     private String name;
     private String surname;
     private double moneyInCash;
     private double moneyInCard;
     private ShoppingCart currentShoppingCart;
-    //private final ArrayList<ShoppingCart> historyShoppingCart = new ArrayList<>();
+    private final ArrayList<ShoppingCart> historyShoppingCart = new ArrayList<>();
 
     // Constructors
     public Person(String name, String surname, double moneyInCash, double moneyInCard) {
@@ -36,17 +38,29 @@ public class Person {
         return currentShoppingCart.getTotalShoppingCartValue();
     }
 
-    public void BuyByCash(){
+    public void buyByCash(){
         if (getMoneyInCash() < this.currentShoppingCart.getTotalShoppingCartValue()){
             throw new RuntimeException("Unable to complete transaction. Please use another form of payment.");
         }
+
+
+        historyShoppingCart.add(currentShoppingCart);
+        currentShoppingCart=null;
         }
         // transaction, odlaczanie wagonikow i odejmowanie qty z dostepnych produktow
-        //historyShoppingCart.add(currentShoppingCart);
-        //this.currentShoppingCart=null;
 
 
-    public void BuyByCard(){
+
+    public void buyByCard(){
+        if (getMoneyInCard() < this.currentShoppingCart.getTotalShoppingCartValue()){
+            throw new RuntimeException("Unable to complete transaction. Please use another form of payment.");
+        }
+
+        setMoneyInCard(getMoneyInCard()- currentShoppingCart.getTotalShoppingCartValue());
+        System.out.println("Value of purchase is: "+ currentShoppingCart.getTotalShoppingCartValue()+" dollars. On your card is now "+ getMoneyInCard() + "dollars");
+        currentShoppingCart.sell();
+        historyShoppingCart.add(currentShoppingCart);
+        currentShoppingCart=null;
 
     }
 
@@ -62,6 +76,10 @@ public class Person {
     }
     public double getMoneyInCard() {
         return moneyInCard;
+    }
+
+    public ArrayList<ShoppingCart> getHistoryShoppingCart() {
+        return historyShoppingCart;
     }
 
     // Setters
@@ -87,5 +105,10 @@ public class Person {
         this.moneyInCard = moneyInCard;
     }
 
-
+    @Override
+    public String toString() {
+        return "Person{" +
+                "historyShoppingCart=" + historyShoppingCart +
+                '}';
+    }
 }
