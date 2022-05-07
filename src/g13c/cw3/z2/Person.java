@@ -43,7 +43,9 @@ public class Person {
             throw new RuntimeException("Unable to complete transaction. Please use another form of payment.");
         }
 
-
+        setMoneyInCash(getMoneyInCash()- currentShoppingCart.getTotalShoppingCartValue()); 
+        System.out.println("Value of purchase is: "+ currentShoppingCart.getTotalShoppingCartValue()+" dollars. In Your wallet is now "+ getMoneyInCash() + "dollars");
+        
         historyShoppingCart.add(currentShoppingCart);
         currentShoppingCart=null;
         }
